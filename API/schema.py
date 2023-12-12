@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from typing import Optional
+from datetime import datetime
 
 class UserTable(BaseModel):
     id: Optional[int] = None
@@ -28,3 +29,11 @@ class ItemTable(BaseModel):
     itemName: str
     price: float
     userId: int
+
+class ReceiptTable(BaseModel):
+    id: int
+    userid: int
+    groupid: int
+    date: datetime
+    currency: str
+    total: float

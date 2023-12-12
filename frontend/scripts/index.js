@@ -9,6 +9,7 @@ function login() {
         // data is the response from the backend
         if (data.success) {
             // redirect to the home page
+            localStorage.setItem("userid", data.userID)
             window.location.href = "/receipts.html"
         } else {
             // show error message

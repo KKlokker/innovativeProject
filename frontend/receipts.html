@@ -2,10 +2,12 @@
 <html>
 <head>
     <title>Login Page</title>
-    <script src="scripts/receipts.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.22.1/dist/bootstrap-table.min.css">
+    <script src="https://unpkg.com/bootstrap-table@1.22.1/dist/bootstrap-table.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="scripts/receipts.js"></script>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -16,7 +18,7 @@
                     <a class="nav-link" href="#">Receipts</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Groups</a>
+                    <a class="nav-link" href="groups.html">Groups</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Budget</a>
@@ -27,21 +29,44 @@
     </nav>
     <div class="container">
         <h2>Receipts</h2>
-        <div id="receipts-container">
-            <!-- Receipt entries will be inserted here by the backend -->
-        </div>
-        <div id="receipt-content">
-            <!-- Receipt content will be inserted here by the backend -->
-        </div>
-    </div>
-    <template id="receipt-template">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title" id="receipt-date"><!-- Receipt date will be inserted here --></h5>
-                <p class="card-text" id="receipt-details"><!-- Receipt details will be inserted here --></p>
+        <span class="d-flex justify-content-around">
+            <div id="receipts-container">
+                <table 
+                    class="table table-bordered table-hover" 
+                    id="receipts-table"
+                    >
+                    <thead>
+                        <tr>
+                            <th data-field="id">ID</th>
+                            <th data-field="date" data-formatter="dateFormatter">Date</th>
+                            <th data-field="total" data-formatter="priceFormatter">Total</th>
+                            <th data-field="groupid" data-formatter="associatedGroupsFormatter">Group</th>
+                            <th data-field="currency" data-visible="false">currency</th>
+                            <th data-field="userid" data-visible="false" >userid</th>
+                            <th data-field="selection" data-checkbox="true" class="d-none"></th>
+                        </tr>
+                    </thead>
+                </table>
             </div>
-        </div>
-    </template>
+            <div id="receipt-content">
+                <table
+                    class="table table-bordered table-hover"
+                    id="receipt-content-table"
+                    data-toggle="table"
+                    >
+                    <thead>
+                        <tr>
+                            <th data-field="id">ID</th>
+                            <th data-field="itemName">Name</th>
+                            <th data-field="price" data-formatter="priceFormatter">Price</th>
+                            <th data-field="userid" data-visible="false">userid</th>
+                            <th data-field="associatedUsers" data-formatter="associatedUsersFormatter">Associated Users</th>
+                            <th data-field="receiptid" data-visible="false">receiptid</th>
+                        </tr>
+                    </thead>
+            </div>
+        </span>
+    </div>
     
 </body>
 </html>

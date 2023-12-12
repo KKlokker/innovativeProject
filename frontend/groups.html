@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Page</title>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.22.1/dist/bootstrap-table.min.css">
+    <script src="https://unpkg.com/bootstrap-table@1.22.1/dist/bootstrap-table.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="scripts/groups.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">ReceiptApp</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="receipts.html">Receipts</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Groups</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Budget</a>
+                </li>
+            </ul>
+            <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Logout</button>
+        </div>
+    </nav>
+    <div class="container">
+        <h2>Groups</h2>
+        <span class="d-flex justify-content-around">
+            <span>
+                <table
+                    id="groups-table"
+                    class="table table-bordered table-hover"
+                    >
+                    <thead>
+                        <tr>
+                            <th data-field="id">ID</th>
+                            <th data-field="groupName">Group name</th>
+                            <th data-field="ownerUserId" data-visible="false">Owner user ID</th>
+                            <th data-field="selection" data-checkbox="true" class="d-none"></th>
+                        </tr>
+                    </thead>
+                </table>
+                <div class="d-flex align-items-center">
+                    <span class="m-2">
+                        <label for="groupName">Create new group</label>
+                        <input type="text" class="form-control" id="groupName" placeholder="Enter group name">
+                        <input type="button" class="btn btn-primary" value="Create" onclick="createGroup()">
+                    </span>
+                    <span class="m-2">
+                        <input type="button" class="btn btn-primary" value="Delete" onclick="deleteGroup()">
+                    </span>
+                </div>
+            </span>
+            <span>
+                <table
+                    id="group-content-table"
+                    class="table table-bordered table-hover"
+                    >
+                    <thead>
+                        <tr>
+                            <th data-field="id">ID</th>
+                            <th data-field="userName">Name</th>
+                            <th data-field="selection" data-checkbox="true" class="d-none"></th>
+                        </tr>
+                    </thead>
+                </table>
+                <div class="d-flex align-items-center">
+                    <span class="m-2">
+                        <label for="memberName">Add new member</label>
+                        <input type="text" class="form-control" id="memberName" placeholder="Enter member name">
+                        <input type="button" class="btn btn-primary" value="Add" onclick="addMember()">
+                    </span>
+                    <span class="m-2">
+                        <input type="button" class="btn btn-primary" value="Remove" onclick="removeMember()">
+                    </span>
+                </div>
+            </span>
+        </span>
+
+    </div>
+    
+</body>
+</html>
