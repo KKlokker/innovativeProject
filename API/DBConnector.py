@@ -1,6 +1,6 @@
 # DB connector to aws rds
 # url receiptapp.crjjkt9g1zem.eu-north-1.rds.amazonaws.com
-# port 5342
+# port 5432
 # username postgres
 # password ?4}]1[T+GX9{
 import psycopg2
