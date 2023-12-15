@@ -129,24 +129,51 @@ def get_groups(userid: int):
 
 @internal_router.post('/{userid}/receipts/{receipt_id}/user/{user_id}')
 def add_user_to_receipt(userid: int, receipt_id: int, user_id: int):
-    pass
+    db = DBConnector()
+    query = 'UPDATE receipttable SET "userwhomadeitid" = %s WHERE "id" = %s'
+    params = (user_id, receipt_id)
+    db.execute(query, params)
+    db.disconnect()
+
+    return {"success": True, "message": "User added to receipt"}
+
 
 @internal_router.post('/{userid}/receipts/{receipt_id}/group/{group_id}')
 def add_group_to_receipt(userid: int, receipt_id: int, group_id: int):
-    pass
+    db = DBConnector()
+    query = 'UPDATE receipttable SET "attachedgroupid" = %s WHERE "id" = %s'
+    params = (group_id, receipt_id)
+    db.execute(query, params)
+    db.disconnect()
+
+    return {"success": True, "message": "Group added to receipt"}
+
 
 @internal_router.post("/internal/{userid}/groups/{groupName}")
 async def create_group(userid: str, groupName: str):
-    pass
+    db = DBConnector()
+    query = 'INSERT INTO grouptable ("owneruserid", "groupname") VALUES (%s, %s)'
+    params = (userid, groupName)
+    db.execute(query, params)
+    db.disconnect()
+    return {"success": True, "message": "Group created"}
 
+
+# TODO - Implement delete if we feel like it
 @internal_router.delete("/internal/{userid}/groups/{group_id}")
 async def delete_group(userid: str, group_id: str):
     pass
 
 @internal_router.post("/internal/{userid}/groups/{group_id}/user/{user}")
 async def add_user_to_group(userid: str, group_id: str, user: str):
-    pass
+    db = DBConnector()
+    query = 'INSERT INTO useringrouptable ("userid", "groupid") VALUES (%s, %s)'
+    params = (user, group_id)
+    db.execute(query, params)
+    db.disconnect()
+    return {"success": True, "message": "User added to group"}
 
+# TODO - Implement delete if we feel like it
 @internal_router.delete("/internal/{userid}/groups/{group_id}/user/{user}")
 async def remove_user_from_group(userid: str, group_id: str, user: str):
     pass
