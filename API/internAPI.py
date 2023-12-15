@@ -149,31 +149,47 @@ def add_group_to_receipt(userid: int, receipt_id: int, group_id: int):
     return {"success": True, "message": "Group added to receipt"}
 
 
-@internal_router.post("/internal/{userid}/groups/{groupName}")
-async def create_group(userid: str, groupName: str):
+@internal_router.put("/{userid}/groups/{groupName}")
+async def create_group(userid: int, groupName: str):
     db = DBConnector()
     query = 'INSERT INTO grouptable ("owneruserid", "groupname") VALUES (%s, %s)'
     params = (userid, groupName)
+    db.execute(query, params)
+    
+    # add user to group
+    query = 'SELECT id FROM grouptable WHERE "groupname" = %s'
+    params = (groupName,)
+    result = db.fetch(query, params)
+    groupId = result[0][0]
+    query = 'INSERT INTO useringrouptable ("userid", "groupid") VALUES (%s, %s)'
+    params = (userid, groupId)
     db.execute(query, params)
     db.disconnect()
     return {"success": True, "message": "Group created"}
 
 
 # TODO - Implement delete if we feel like it
-@internal_router.delete("/internal/{userid}/groups/{group_id}")
-async def delete_group(userid: str, group_id: str):
+@internal_router.delete("/{userid}/groups/{group_id}")
+async def delete_group(userid: int, group_id: str):
     pass
 
-@internal_router.post("/internal/{userid}/groups/{group_id}/user/{user}")
-async def add_user_to_group(userid: str, group_id: str, user: str):
+@internal_router.post("/{userid}/groups/{group_id}/user/{user}")
+async def add_user_to_group(userid: int, group_id: str, user: str):
     db = DBConnector()
+    # get user id from username
+    query = 'SELECT id FROM usertable WHERE "username" = %s'
+    params = (user,)
+    result = db.fetch(query, params)
+    if result == []:
+        return {"success": False, "error": "User not found"}
+    requestedUserId = result[0][0]
     query = 'INSERT INTO useringrouptable ("userid", "groupid") VALUES (%s, %s)'
-    params = (user, group_id)
+    params = (requestedUserId, group_id)
     db.execute(query, params)
     db.disconnect()
     return {"success": True, "message": "User added to group"}
 
 # TODO - Implement delete if we feel like it
-@internal_router.delete("/internal/{userid}/groups/{group_id}/user/{user}")
-async def remove_user_from_group(userid: str, group_id: str, user: str):
+@internal_router.delete("/{userid}/groups/{group_id}/user/{user}")
+async def remove_user_from_group(userid: int, group_id: str, user: str):
     pass

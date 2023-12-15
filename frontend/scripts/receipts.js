@@ -92,7 +92,7 @@ function associatedGroupsFormatter(value, row) {
         let option = $("<option></option>");
         option.attr("value", group.id);
         option.text(group.groupName);
-        if (group.id == row.groupId)
+        if (group.id == row.groupid)
             option.attr("selected", "selected");
         select.append(option);
     }

@@ -10,6 +10,7 @@ async function init() {
     await $.get(url, function(data) {
         console.log(data);
         $("#groups-table").bootstrapTable("hideLoading");
+        $("#groups-table").bootstrapTable("destroy");
         $("#groups-table").bootstrapTable({
             data: data,
             clickToSelect: true,
@@ -21,13 +22,14 @@ async function init() {
 
 function viewGroup(event) {
     // if the select is clicked, don't view the receipt
-    if ($(event.target).is("select")) {
+    if (event && $(event.target).is("select")) {
         return;
     }
     let group = $("#groups-table").bootstrapTable("getSelections")[0];
     let url = `http://localhost:5000/internal/${userid}/groupMembers/${group.id}`;
     $.get(url, function(data) {
         console.log(data);
+        $("#group-content-table").bootstrapTable("destroy");
         $("#group-content-table").bootstrapTable({
             data: data,
             clickToSelect: true,
@@ -37,11 +39,16 @@ function viewGroup(event) {
 }
 
 function createGroup() {
-    let groupName = $("#group-name").val();
-    let groupMembers = $("#group-members").val();
+    let groupName = $("#groupName").val();
     let url = `http://localhost:5000/internal/${userid}/groups/${groupName}`;
-    $.post(url, function(data) {
-        console.log(data);
+    //put request
+    $.ajax({
+        url: url,
+        type: "PUT",
+        success: function(data) {
+            console.log(data);
+            init();
+        }
     });
 }
 
@@ -53,16 +60,18 @@ function deleteGroup() {
         type: "DELETE",
         success: function(data) {
             console.log(data);
+            init();
         }
     });
 }
 
 function addUserToGroup() {
     let group = $("#groups-table").bootstrapTable("getSelections")[0];
-    let user = $("#group-members").val();
+    let user = $("#memberName").val();
     let url = `http://localhost:5000/internal/${userid}/groups/${group.id}/user/${user}`;
     $.post(url, function(data) {
         console.log(data);
+        viewGroup(undefined);
     });
 }
 
@@ -75,6 +84,7 @@ function removeUserFromGroup() {
         type: "DELETE",
         success: function(data) {
             console.log(data);
+            viewGroup(undefined);
         }
     });
 }
