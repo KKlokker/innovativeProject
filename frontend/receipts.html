@@ -29,7 +29,10 @@
     </nav>
     <div class="container">
         <h2>Receipts</h2>
-        <span class="d-flex justify-content-around">
+        <span>
+            <button class="btn btn-primary" data-toggle="modal" data-target=".uploadReceiptModal">Upload Receipt</button>
+        </span>
+        <span class="d-flex justify-content-around mt-2">
             <div id="receipts-container">
                 <table 
                     class="table table-bordered table-hover" 
@@ -67,6 +70,30 @@
             </div>
         </span>
     </div>
+    <div class="modal uploadReceiptModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Upload Receipt</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <select id="uploadReceiptGroup" class="form-control mb-2">
+                </select>
+                <span>
+                    <input type="file" id="receiptFile" name="receiptFile" accept="image/*">
+                    <input type="button" class="btn btn-primary" value="Upload" onclick="uploadReceipt()" id="uploadReceiptButton">
+                    <span id="uploadReceiptSpinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                </span>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
     
 </body>
 </html>

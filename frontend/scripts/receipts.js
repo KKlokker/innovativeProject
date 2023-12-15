@@ -7,11 +7,12 @@ async function init() {
     if (userid == null) {
         window.location.href = "/"
     }
-    populateGroupUsers();
-    populateGroups();
+    await populateGroupUsers();
+    await populateGroups();
     $("#receipts-table").bootstrapTable("showLoading");
     await $.get("http://localhost:5000/internal/" + userid + "/receipts", function(data) {
         $("#receipts-table").bootstrapTable("hideLoading");
+        $("#receipts-table").bootstrapTable("destroy");
         $("#receipts-table").bootstrapTable({
             data: data,
             clickToSelect: true,
@@ -28,6 +29,15 @@ async function init() {
             });
         });
     });
+    let groupSeelct = $("#uploadReceiptGroup");
+    groupSeelct.empty();
+    for (let i = 0; i < groups.length; i++) {
+        let group = groups[i];
+        let option = $("<option></option>");
+        option.attr("value", group.id);
+        option.text(group.groupName);
+        groupSeelct.append(option);
+    }
 }
 
 function viewReceipt(event) {
@@ -99,6 +109,31 @@ function associatedGroupsFormatter(value, row) {
     return select.prop("outerHTML");
 }
 
+function uploadReceipt() {
+    let file = $("#receiptFile")[0].files[0];
+    let formData = new FormData();
+    let group_id = $("#uploadReceiptGroup").val();
+    formData.append("receipt", file);
+    let url = `http://localhost:5000/internal/${userid}/receipt/${group_id}`
+    // disable the upload button and show the loading spinner
+    $("#uploadReceiptButton").prop("disabled", true);
+    $("#uploadReceiptSpinner").show();
+    $.ajax({
+        url: url,
+        type: "PUT",
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(data) {
+            console.log(data);
+            $(".uploadReceiptModal").modal("hide");
+            $("#uploadReceiptButton").prop("disabled", false);
+            $("#uploadReceiptSpinner").hide();
+            init();
+        }
+    });
+}
+
 
 async function populateGroupUsers() {
     let url = `http://localhost:5000/internal/${userid}/groupMembers`
@@ -114,4 +149,5 @@ async function populateGroups() {
     });
 }
 
-$(document).ready(init);
+$(document).ready(() => {
+    $("#uploadReceiptSpinner").hide(); init();});

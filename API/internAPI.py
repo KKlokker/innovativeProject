@@ -1,6 +1,9 @@
-from fastapi import APIRouter
+import os
+import shutil
+from fastapi import APIRouter, File, UploadFile
 from API.DBConnector import DBConnector
 import API.schema as schema
+import API.receipt as receiptExtractor
 
 internal_router = APIRouter()
 
@@ -155,7 +158,7 @@ async def create_group(userid: int, groupName: str):
     query = 'INSERT INTO grouptable ("owneruserid", "groupname") VALUES (%s, %s)'
     params = (userid, groupName)
     db.execute(query, params)
-    
+
     # add user to group
     query = 'SELECT id FROM grouptable WHERE "groupname" = %s'
     params = (groupName,)
@@ -193,3 +196,15 @@ async def add_user_to_group(userid: int, group_id: str, user: str):
 @internal_router.delete("/{userid}/groups/{group_id}/user/{user}")
 async def remove_user_from_group(userid: int, group_id: str, user: str):
     pass
+
+@internal_router.put("/{userid}/receipt/{group_id}")
+async def create_receipt(userid: int, group_id: str, receipt: UploadFile = File(...)):
+    # save image to API/images
+    image_path = f"API/images/{receipt.filename}"
+    with open(image_path, "wb") as buffer:
+        shutil.copyfileobj(receipt.file, buffer)
+    # save receipt to db
+    receiptExtractor.saveReceiptToDB(image_path, userid, group_id)
+    # delete image
+    os.remove(image_path)
+    return {"success": True, "message": "Receipt created"}

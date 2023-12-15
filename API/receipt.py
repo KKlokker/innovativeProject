@@ -1,7 +1,7 @@
 import datetime
 import cv2
 import easyocr
-import DBConnector
+import API.DBConnector as DBConnector
 
 def extractText(path):
     # load image from path
@@ -16,7 +16,7 @@ def extractText(path):
     # return result
     return result
 
-def extractItemsFromText(text, imgPath):
+def extractItemsFromText(text):
     # Find text with currency in it
     availableCurrencies = ["kr", "€", "$", "£"]
     usedCurrency = None
@@ -72,13 +72,10 @@ def extractItemsFromText(text, imgPath):
                 break
     return { "items": AllItems, "currency": usedCurrency }
 
-def saveReceiptToDB(imgPath):
-    receptInfo = extractItemsFromText(extractText(imgPath), imgPath)
+def saveReceiptToDB(imgPath, userId, groupId):
+    receptInfo = extractItemsFromText(extractText(imgPath))
     db = DBConnector.DBConnector()
-    userId = 5
-    groupId = 1
     date = datetime.datetime.now()
-    date = date.strftime("%Y-%m-%d")
     currency = receptInfo["currency"]
     # create receipt
     query = 'INSERT INTO public.receipttable("userwhomadeitid", "attachedgroupid", "dateofcreation", "currencytype") VALUES(%s, %s, %s, %s) RETURNING id'
